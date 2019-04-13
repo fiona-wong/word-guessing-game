@@ -35,6 +35,16 @@ module.exports = {
         contentBase: path.join(__dirname, "public/"),
         port: 3000,
         publicPath: "http://localhost:3000/dist/",
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods":
+                "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+            "Access-Control-Allow-Headers":
+                "X-Requested-With, content-type, Authorization"
+        },
+        proxy: {
+            "/words": "http://localhost:5000"
+        },
         hotOnly: true
     },
     plugins: [new webpack.HotModuleReplacementPlugin()]

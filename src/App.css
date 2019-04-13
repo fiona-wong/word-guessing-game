@@ -2,3 +2,38 @@
     margin: 1rem;
     font-family: Arial, Helvetica, sans-serif;
 }
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.letter-placeholder {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    margin: 10px 20px 0px 20px;
+    border-bottom: 2px solid #2e4272;
+}
+
+p {
+    display: inline-block;
+    font-size: 50px;
+    color: #2e4272;
+    margin: 10px 20px 0px 20px;
+}
+
+.alphabet-button {
+    margin: 10px 5px 10px 5px;
+    border: solid 1px transparent;
+    border-radius: 4px;
+    padding: 0.5em 1em;
+    color: #fff;
+    background-color: #2e4272;
+    font-size: 20px;
+}
+
+button:disabled {
+    background-color: #b1bede;
+}

@@ -1,8 +1,10 @@
 const path = require("path");
 const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    entry: "./src/index.js",
+    entry: path.join(__dirname, "src", "index.js"),
+    devtool: "source-map",
     mode: "development",
     module: {
         rules: [
@@ -22,30 +24,47 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ["style-loader", "css-loader"]
+            },
+            {
+                test: /\.(gif|png)$/,
+                use: [
+                    {
+                        loader: "file-loader",
+                        options: {
+                            name: "[path][name].[ext]"
+                        }
+                    }
+                ]
             }
         ]
     },
-    resolve: { extensions: ["*", ".js", ".jsx"] },
+    resolve: {
+        modules: [path.resolve(__dirname, "src"), "node_modules"],
+        extensions: ["*", ".js", ".jsx"]
+    },
     output: {
-        path: path.resolve(__dirname, "dist/"),
-        publicPath: "/dist/",
+        path: path.resolve(__dirname, "dist"),
+        publicPath: "/",
         filename: "bundle.js"
     },
     devServer: {
-        contentBase: path.join(__dirname, "public/"),
+        contentBase: path.join(__dirname, "public"),
         port: 3000,
-        publicPath: "http://localhost:3000/dist/",
+        publicPath: "/",
         headers: {
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods":
-                "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-            "Access-Control-Allow-Headers":
-                "X-Requested-With, content-type, Authorization"
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+            "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
         },
         proxy: {
             "/words": "http://localhost:5000"
         },
-        hotOnly: true
+        hot: true
     },
-    plugins: [new webpack.HotModuleReplacementPlugin()]
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: path.join(__dirname, "public", "index.html")
+        }),
+        new webpack.HotModuleReplacementPlugin()
+    ]
 };

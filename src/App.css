@@ -1,12 +1,14 @@
-.App {
-    margin: 1rem;
+.main-content {
     font-family: Arial, Helvetica, sans-serif;
-}
-
-main {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin: 0px 5%;
+}
+
+.main-content_modal {
+    margin: 3%;
 }
 
 .letter-placeholder {
@@ -17,11 +19,34 @@ main {
     border-bottom: 2px solid #2e4272;
 }
 
-p {
-    display: inline-block;
+.text-normal {
     font-size: 50px;
     color: #2e4272;
     margin: 10px 20px 0px 20px;
+}
+
+h1 {
+    font-size: 50px;
+    color: #0a1838;
+}
+
+h3 {
+    font-size: 30px;
+    color: #0a1838;
+}
+
+.interactive_section {
+    display: inline-flex;
+    justify-content: center;
+}
+
+.alphabet_section {
+    width: 50%;
+    margin: 0px 2%;
+}
+
+.guesses-left_section {
+    display: flex;
 }
 
 .alphabet-button {
@@ -36,4 +61,35 @@ p {
 
 button:disabled {
     background-color: #b1bede;
+}
+
+.reset-button {
+    position: fixed;
+    right: 10%;
+    bottom: 10%;
+    background-color: #020816;
+    color: #fff;
+    width: 200px;
+    padding: 20px 5px 20px 5px;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+.modal-button {
+    border: 2px solid #020816;
+    border-radius: 10px;
+    font-size: 15px;
+    width: 200px;
+    padding: 10px 5px 10px 5px;
+    margin: 30px 30px 30px 30px;
+}
+
+.modal-button_primary {
+    background-color: #020816;
+    color: #fff;
+}
+
+.modal-button_secondary {
+    background-color: #fff;
+    color: #020816;
 }

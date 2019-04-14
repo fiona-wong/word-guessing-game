@@ -1,8 +1,18 @@
 import React, { Component } from "react";
 import { hot } from "react-hot-loader";
 import { ALPHABET } from "./constants";
+import Modal from "./components/Modal";
+import wrongGuessOne from "./images/wrongguess1.png";
+import wrongGuessTwo from "./images/wrongguess2.png";
+import wrongGuessThree from "./images/wrongguess3.png";
+import wrongGuessFour from "./images/wrongguess4.png";
+import wrongGuessFive from "./images/wrongguess5.png";
+import wrongGuessSix from "./images/wrongguess6.png";
+import winnerImage from "./images/winnerwinner.gif";
 
-import "./App.css";
+import "./app.css";
+
+const WINNING_TEXT = "YAY YOU WON! Play again?";
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max));
 
@@ -12,6 +22,46 @@ const Letter = ({ letter, ...props }) => (
     </button>
 );
 
+const GuessWord = ({ letter, correctLettersGuessed }) => {
+    const isNotInWord = correctLettersGuessed.indexOf(letter) === -1;
+    let displayLetter = <span className="text-normal">{letter}</span>;
+    if (isNotInWord) {
+        displayLetter = <span className="letter-placeholder" />;
+    }
+    return displayLetter;
+};
+
+const WRONG_GUESS_IMAGE_MAP = [
+    {
+        imageSrc: undefined,
+        imageAlt: undefined
+    },
+    {
+        imageSrc: wrongGuessOne,
+        imageAlt: "wrong guess 1"
+    },
+    {
+        imageSrc: wrongGuessTwo,
+        imageAlt: "wrong guess 2"
+    },
+    {
+        imageSrc: wrongGuessThree,
+        imageAlt: "wrong guess 3"
+    },
+    {
+        imageSrc: wrongGuessFour,
+        imageAlt: "wrong guess 4"
+    },
+    {
+        imageSrc: wrongGuessFive,
+        imageAlt: "wrong guess 5"
+    },
+    {
+        imageSrc: wrongGuessSix,
+        imageAlt: "wrong guess 6"
+    }
+];
+
 class App extends Component {
     state = {
         wordBank: [],
@@ -20,7 +70,9 @@ class App extends Component {
         correctLettersGuessed: [],
         wrongGuessCount: 0,
         uniqueLetterCount: 0,
-        disableAllButtons: false
+        disableAllButtons: false,
+        showResetModal: false,
+        gameOverText: ""
     };
 
     componentDidMount() {
@@ -60,7 +112,7 @@ class App extends Component {
                 },
                 () => {
                     if (this.state.wrongGuessCount === 6) {
-                        this.handleEndOfGame("You LOSTTT :( Try again?");
+                        this.handleLoseGame();
                     }
                 }
             );
@@ -72,22 +124,50 @@ class App extends Component {
                 },
                 () => {
                     if (this.state.correctLettersGuessed.length === this.state.uniqueLetterCount) {
-                        this.handleEndOfGame("YAY!!! You won! Try again?");
+                        this.handleWinGame();
                     }
                 }
             );
         }
     };
 
-    handleEndOfGame = (message) => {
-        const shouldStartNewGame = confirm(message);
-        if (shouldStartNewGame) {
-            location.reload();
-        } else {
-            this.setState({
-                disableAllButtons: true
-            });
-        }
+    handleWinGame = () => {
+        this.setState(
+            {
+                gameOverText: WINNING_TEXT
+            },
+            () => {
+                this.handleOpenModal();
+            }
+        );
+    };
+
+    handleLoseGame = () => {
+        this.setState(
+            {
+                gameOverText: "Bummer, you lost! Play again?"
+            },
+            () => {
+                this.handleOpenModal();
+            }
+        );
+    };
+
+    handleRetryGame = () => {
+        location.reload();
+    };
+
+    handleCloseModal = () => {
+        this.setState({
+            showResetModal: false,
+            disableAllButtons: true
+        });
+    };
+
+    handleOpenModal = () => {
+        this.setState({
+            showResetModal: true
+        });
     };
 
     render() {
@@ -96,14 +176,24 @@ class App extends Component {
             correctLettersGuessed,
             wrongGuessCount,
             incorrectLettersGuessed,
-            disableAllButtons
+            disableAllButtons,
+            showResetModal,
+            gameOverText
         } = this.state;
         const lettersGuessed = [...correctLettersGuessed, ...incorrectLettersGuessed];
+        const gameWon = gameOverText === WINNING_TEXT;
         return (
-            <main>
-                <div className="App">
-                    <h1>Hangman</h1>
-                    <section className="alphabet_section">
+            <main className="main-content">
+                <h1>Guess the Word Game</h1>
+                <section className="interactive_section">
+                    <img
+                        src={gameWon ? winnerImage : WRONG_GUESS_IMAGE_MAP[wrongGuessCount].imageSrc}
+                        alt={gameWon ? winnerImage : WRONG_GUESS_IMAGE_MAP[wrongGuessCount].imageAlt}
+                        width="300"
+                        height="300"
+                    />
+                    <div className="alphabet_section">
+                        <p>Click letters to guess!</p>
                         {ALPHABET.map((letter) => (
                             <Letter
                                 onClick={this.handleClickLetter.bind(this, letter)}
@@ -112,27 +202,41 @@ class App extends Component {
                                 letter={letter}
                             />
                         ))}
-                    </section>
-                    <section className="word-shown_section">
-                        {currentWord.map((letter, index) =>
-                            correctLettersGuessed.indexOf(letter) === -1 ? (
-                                <div key={index} className="letter-placeholder" />
-                            ) : (
-                                <p key={index}>{letter}</p>
-                            )
-                        )}
-                    </section>
-                    <section className="letters-guessed_section">
-                        Wrong Letters Guessed:
-                        {incorrectLettersGuessed.map((letter, index) => (
-                            <p key={index}>{letter}</p>
-                        ))}
-                    </section>
-                    <section className="guesses-left_section">
-                        Numbers of Guesses Left:
-                        <p>{6 - wrongGuessCount}</p>
-                    </section>
-                </div>
+                    </div>
+                </section>
+                <section className="word-shown_section">
+                    {currentWord.map((letter, index) => (
+                        <GuessWord key={index} letter={letter} correctLettersGuessed={correctLettersGuessed} />
+                    ))}
+                </section>
+                <section className="letters-guessed_section">
+                    <h3>Wrong Letters Guessed:</h3>
+                    {incorrectLettersGuessed.map((letter, index) => (
+                        <span className="text-normal" key={index}>
+                            {letter}
+                        </span>
+                    ))}
+                </section>
+                <section className="guesses-left_section">
+                    <h3>Numbers of Guesses Left:</h3>
+                    <span className="text-normal">{6 - wrongGuessCount}</span>
+                </section>
+                <Modal show={showResetModal}>
+                    <div className="main-content main-content_modal">
+                        <p className="text-normal">{gameOverText}</p>
+                        <div>
+                            <button className="modal-button modal-button_secondary" onClick={this.handleCloseModal}>
+                                Close
+                            </button>
+                            <button className="modal-button modal-button_primary" onClick={this.handleRetryGame}>
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </Modal>
+                <button onClick={this.handleRetryGame} className="reset-button">
+                    Play Again
+                </button>
             </main>
         );
     }

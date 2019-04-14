@@ -44,13 +44,13 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        publicPath: "/",
+        publicPath: "/dist/",
         filename: "bundle.js"
     },
     devServer: {
         contentBase: path.join(__dirname, "public"),
         port: 3000,
-        publicPath: "/",
+        publicPath: "/dist/",
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",

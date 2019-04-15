@@ -33,4 +33,4 @@ yarn start
 
 Go to localhost:3000 and you should see the game
 
-Demo coming soon...
+Live demo can be found here: https://guess-word-game.netlify.com/

@@ -5,8 +5,10 @@
     "main": "index.js",
     "scripts": {
         "start": "webpack-dev-server -d --config webpack.config.js --mode development",
-        "build": "webpack --mode development",
-        "test": "jest"
+        "build": "webpack --config webpack.config.js --mode production",
+        "test": "jest",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages-d-build"
     },
     "repository": {
         "type": "git",
@@ -17,7 +19,12 @@
     "bugs": {
         "url": "https://github.com/fiona-wong/reach-project/issues"
     },
-    "homepage": "https://github.com/fiona-wong/reach-project#readme",
+    "homepage": "https://fiona-wong.github.io/word-guessing-game/",
+    "jest": {
+        "setupFilesAfterEnv": [
+            "./enzyme.setup.js"
+        ]
+    },
     "devDependencies": {
         "@babel/cli": "^7.1.0",
         "@babel/core": "^7.4.3",
@@ -27,7 +34,10 @@
         "@babel/preset-react": "^7.0.0",
         "babel-eslint": "^10.0.1",
         "babel-loader": "^8.0.5",
+        "clean-webpack-plugin": "^2.0.1",
         "css-loader": "^1.0.0",
+        "enzyme": "^3.9.0",
+        "enzyme-adapter-react-16": "^1.12.1",
         "eslint": "^5.16.0",
         "eslint-config-react": "^1.1.7",
         "eslint-loader": "^2.1.2",
@@ -36,6 +46,7 @@
         "gh-pages": "^2.0.1",
         "html-webpack-plugin": "^3.2.0",
         "image-webpack-loader": "^4.6.0",
+        "jest": "^24.7.1",
         "style-loader": "^0.23.0",
         "webpack": "^4.19.1",
         "webpack-cli": "^3.1.1",
@@ -44,13 +55,11 @@
     "dependencies": {
         "bootstrap": "^4.3.1",
         "cors": "^2.8.5",
-        "express": "^4.16.4",
         "react": "^16.5.2",
         "react-bootstrap": "^1.0.0-beta.8",
         "react-dom": "^16.5.2",
         "react-hot-loader": "^4.3.11",
         "request": "^2.88.0",
         "sass": "^1.18.0"
-    },
-    "proxy": "http://localhost:5000"
+    }
 }

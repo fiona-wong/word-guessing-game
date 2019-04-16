@@ -11,9 +11,12 @@ import Modal from "./components/Modal";
 import LoadingSpinner from "./components/LoadingSpinner";
 
 describe("App", () => {
+    beforeEach(() => {
+        api.getWordsApi = jest.fn().mockResolvedValue(["hi", "bye", "cya"]);
+    });
+
     it("should render correctly", () => {
         const wrapper = mount(<App />);
-        api.getWordsApi = jest.fn().mockResolvedValue(["hi", "bye", "cya"]);
 
         expect(wrapper.find(InteractiveSection).exists()).toBe(true);
         expect(wrapper.find(WordShown).exists()).toBe(true);
@@ -23,18 +26,18 @@ describe("App", () => {
     });
     it("should render modal when showResetModal is true", () => {
         const wrapper = mount(<App />);
-        api.getWordsApi = jest.fn().mockResolvedValue(["hi", "bye", "cya"]);
         wrapper.setState({
             showResetModal: true
         });
+
         expect(wrapper.find(Modal).exists()).toBe(true);
     });
     it("should not render loading spinner when isLoading is false", () => {
         const wrapper = mount(<App />);
-        api.getWordsApi = jest.fn().mockResolvedValue(["hi", "bye", "cya"]);
         wrapper.setState({
             isLoading: false
         });
+        
         expect(wrapper.find(LoadingSpinner).exists()).toBe(false);
     });
 });

@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
     entry: path.join(__dirname, "src", "index.js"),
@@ -58,5 +59,8 @@ module.exports = {
             template: path.join(__dirname, "public", "index.html")
         }),
         new webpack.HotModuleReplacementPlugin()
-    ]
+    ],
+    optimization: {
+        minimizer: [new UglifyJsPlugin()]
+    }
 };

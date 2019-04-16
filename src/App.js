@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { hot } from "react-hot-loader";
+
 import { ALPHABET } from "./constants";
+import { getWordsApi } from "./api";
+
 import Modal from "./components/Modal";
+import LoadingSpinner from "./components/LoadingSpinner";
+
 import wrongGuessOne from "./images/wrongguess1.png";
 import wrongGuessTwo from "./images/wrongguess2.png";
 import wrongGuessThree from "./images/wrongguess3.png";
@@ -72,21 +77,24 @@ class App extends Component {
         uniqueLetterCount: 0,
         disableAllButtons: false,
         showResetModal: false,
-        gameOverText: ""
+        gameOverText: "",
+        isLoading: true
     };
 
     componentDidMount() {
-        const PROXY = "https://cors-anywhere.herokuapp.com";
-        const URL = "http://app.linkedin-reach.io/words";
-        fetch(`${PROXY}/${URL}`)
-            .then((wordsText) => wordsText.text())
-            .then((wordsString) => {
-                const wordList = wordsString.split("\n");
-                this.setState({
+        getWordsApi().then((wordList) => {
+            this.setState(
+                {
                     wordBank: wordList
-                });
-                this.getRandomWord();
-            });
+                },
+                () => {
+                    this.getRandomWord();
+                    this.setState({
+                        isLoading: false
+                    });
+                }
+            );
+        });
     }
 
     getRandomWord = () => {
@@ -178,13 +186,19 @@ class App extends Component {
             incorrectLettersGuessed,
             disableAllButtons,
             showResetModal,
-            gameOverText
+            gameOverText,
+            isLoading
         } = this.state;
         const lettersGuessed = [...correctLettersGuessed, ...incorrectLettersGuessed];
         const gameWon = gameOverText === WINNING_TEXT;
+        let loadingSpinner = null;
+        if (isLoading) {
+            loadingSpinner = <LoadingSpinner />;
+        }
         return (
             <main className="main-content">
                 <h1>Guess the Word Game</h1>
+                {loadingSpinner}
                 <section className="interactive_section">
                     <img
                         src={gameWon ? winnerImage : WRONG_GUESS_IMAGE_MAP[wrongGuessCount].imageSrc}

@@ -103,3 +103,49 @@ button:disabled {
     border: none;
     color: #2e4272;
 }
+
+.winner-egg {
+    position: absolute;
+    top: 0px;
+    z-index: 2;
+    animation-duration: 8s;
+    animation-name: across;
+    animation-iteration-count: infinite;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes across {
+    0% {
+        left: 0%;
+    }
+    25% {
+        left: 25%;
+    }
+    50% {
+        left: 50%;
+    }
+    75% {
+        left: 75%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes across {
+    0% {
+        left: 0%;
+    }
+    25% {
+        left: 25%;
+    }
+    50% {
+        left: 50%;
+    }
+    75% {
+        left: 75%;
+    }
+    100% {
+        left: 100%;
+    }
+}

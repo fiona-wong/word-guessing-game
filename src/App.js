@@ -11,6 +11,8 @@ import GuessesLeft from "./components/GuessesLeft";
 import Modal from "./components/Modal";
 import LoadingSpinner from "./components/LoadingSpinner";
 
+import winnerEasterEgg from "./images/winnerEasterEgg.png";
+
 import "./app.css";
 
 const WINNING_TEXT = "YAY YOU WON! Play again?";
@@ -206,6 +208,11 @@ class App extends Component {
                         handleSecondaryAction={this.handleEndGame}
                         handlePrimaryAction={this.handleRetryGame}
                     />
+                </ConditionalComponent>
+                <ConditionalComponent shouldRender={gameWon}>
+                    <div className="winner-egg">
+                        <img src={winnerEasterEgg} alt="YAY WINNER" />
+                    </div>
                 </ConditionalComponent>
                 <button onClick={this.handleRetryGame} className="reset-button">
                     Play Again

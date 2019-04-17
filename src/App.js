@@ -16,6 +16,7 @@ import "./app.css";
 const WINNING_TEXT = "YAY YOU WON! Play again?";
 
 const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max));
+const isNotIncluded = (list, letter) => list.indexOf(letter) === -1;
 
 class App extends Component {
     state = {
@@ -28,7 +29,8 @@ class App extends Component {
         disableAllButtons: false,
         showResetModal: false,
         gameOverText: "",
-        isLoading: true
+        isLoading: true,
+        showHintModal: false
     };
 
     componentDidMount() {
@@ -62,31 +64,39 @@ class App extends Component {
         const { currentWord } = this.state;
 
         if (currentWord.indexOf(letter) === -1) {
-            const newIncorrectLettersGuessed = [...this.state.incorrectLettersGuessed, letter];
-            this.setState(
-                {
-                    wrongGuessCount: this.state.wrongGuessCount + 1,
-                    incorrectLettersGuessed: newIncorrectLettersGuessed
-                },
-                () => {
-                    if (this.state.wrongGuessCount === 6) {
-                        this.handleLoseGame();
-                    }
-                }
-            );
+            this.handleIncorrectGuess(letter);
         } else {
-            const newCorrectLettersGuessed = [...this.state.correctLettersGuessed, letter];
-            this.setState(
-                {
-                    correctLettersGuessed: newCorrectLettersGuessed
-                },
-                () => {
-                    if (this.state.correctLettersGuessed.length === this.state.uniqueLetterCount) {
-                        this.handleWinGame();
-                    }
-                }
-            );
+            this.handleCorrectGuess(letter);
         }
+    };
+
+    handleCorrectGuess = (letter) => {
+        const newCorrectLettersGuessed = [...this.state.correctLettersGuessed, letter];
+        this.setState(
+            {
+                correctLettersGuessed: newCorrectLettersGuessed
+            },
+            () => {
+                if (this.state.correctLettersGuessed.length === this.state.uniqueLetterCount) {
+                    this.handleWinGame();
+                }
+            }
+        );
+    };
+
+    handleIncorrectGuess = (letter) => {
+        const newIncorrectLettersGuessed = [...this.state.incorrectLettersGuessed, letter];
+        this.setState(
+            {
+                wrongGuessCount: this.state.wrongGuessCount + 1,
+                incorrectLettersGuessed: newIncorrectLettersGuessed
+            },
+            () => {
+                if (this.state.wrongGuessCount === 6) {
+                    this.handleLoseGame();
+                }
+            }
+        );
     };
 
     handleWinGame = () => {
@@ -115,7 +125,7 @@ class App extends Component {
         location.reload();
     };
 
-    handleCloseModal = () => {
+    handleEndGame = () => {
         this.setState({
             showResetModal: false,
             disableAllButtons: true
@@ -128,6 +138,27 @@ class App extends Component {
         });
     };
 
+    handleHintClick = () => {
+        this.setState({
+            showHintModal: true
+        });
+    };
+
+    handleDismissModal = () => {
+        this.setState({
+            showHintModal: false
+        });
+    };
+
+    handleShowHint = () => {
+        const { correctLettersGuessed, currentWord } = this.state;
+        const hintLetter = currentWord.find((letter) => correctLettersGuessed.indexOf(letter) === -1);
+        this.handleCorrectGuess(hintLetter);
+        this.setState({
+            showHintModal: false
+        });
+    };
+
     render() {
         const {
             currentWord,
@@ -135,6 +166,7 @@ class App extends Component {
             wrongGuessCount,
             incorrectLettersGuessed,
             disableAllButtons,
+            showHintModal,
             showResetModal,
             gameOverText,
             isLoading
@@ -158,11 +190,21 @@ class App extends Component {
                 <WordShown currentWord={currentWord} correctLettersGuessed={correctLettersGuessed} />
                 <WrongLettersGuessed incorrectLettersGuessed={incorrectLettersGuessed} />
                 <GuessesLeft wrongGuessCount={wrongGuessCount} />
+                <button className="hint-button" onClick={this.handleHintClick}>
+                    Hint
+                </button>
+                <ConditionalComponent shouldRender={showHintModal}>
+                    <Modal
+                        modalText="Are you suuuuuuure you want a hint?"
+                        handleSecondaryAction={this.handleDismissModal}
+                        handlePrimaryAction={this.handleShowHint}
+                    />
+                </ConditionalComponent>
                 <ConditionalComponent shouldRender={showResetModal}>
                     <Modal
-                        gameOverText={gameOverText}
-                        handleCloseModal={this.handleCloseModal}
-                        handleRetryGame={this.handleRetryGame}
+                        modalText={gameOverText}
+                        handleSecondaryAction={this.handleEndGame}
+                        handlePrimaryAction={this.handleRetryGame}
                     />
                 </ConditionalComponent>
                 <button onClick={this.handleRetryGame} className="reset-button">

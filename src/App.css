@@ -19,6 +19,10 @@
     border-bottom: 2px solid #2e4272;
 }
 
+.text-center {
+    text-align: center;
+}
+
 .text-normal {
     font-size: 50px;
     color: #2e4272;
@@ -92,4 +96,10 @@ button:disabled {
 .modal-button_secondary {
     background-color: #fff;
     color: #020816;
+}
+
+.hint-button {
+    font-size: 8px;
+    border: none;
+    color: #2e4272;
 }

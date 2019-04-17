@@ -10,9 +10,11 @@ import GuessesLeft from "./components/GuessesLeft";
 import Modal from "./components/Modal";
 import LoadingSpinner from "./components/LoadingSpinner";
 
+const MOCK_WORD_BANK = ["hi", "bye", "cya"];
+
 describe("App", () => {
     beforeEach(() => {
-        api.getWordsApi = jest.fn().mockResolvedValue(["hi", "bye", "cya"]);
+        api.getWordsApi = jest.fn().mockResolvedValue(MOCK_WORD_BANK);
     });
 
     it("should render correctly", () => {
@@ -37,7 +39,7 @@ describe("App", () => {
         wrapper.setState({
             isLoading: false
         });
-        
+
         expect(wrapper.find(LoadingSpinner).exists()).toBe(false);
     });
 });
